@@ -1,6 +1,7 @@
 const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-nav]");
+const largeViewport = window.matchMedia("(min-width: 981px)");
 const revealSelectors = [
     ".hero-copy",
     ".hero-visual",
@@ -19,17 +20,51 @@ const revealSelectors = [
     ".footer-shell > *"
 ];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let lastFocusedElement = null;
 
-const closeNavigation = () => {
+const navOverlay = document.createElement("button");
+navOverlay.type = "button";
+navOverlay.className = "nav-overlay";
+navOverlay.tabIndex = -1;
+navOverlay.setAttribute("aria-hidden", "true");
+document.body.append(navOverlay);
+
+const getNavigationFocusables = () => {
+    if (!navToggle || !nav) {
+        return [];
+    }
+
+    return [navToggle, ...nav.querySelectorAll("a[href]")];
+};
+
+const syncNavigationLabels = (isOpen) => {
+    if (!navToggle) {
+        return;
+    }
+
+    navToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+};
+
+const closeNavigation = ({ restoreFocus = true } = {}) => {
     if (!header || !navToggle) {
         return;
     }
 
     header.classList.remove("nav-open");
+    document.body.classList.remove("nav-open");
     navToggle.setAttribute("aria-expanded", "false");
+    syncNavigationLabels(false);
+
+    if (restoreFocus && lastFocusedElement instanceof HTMLElement) {
+        lastFocusedElement.focus();
+    }
+
+    lastFocusedElement = null;
 };
 
 if (header && navToggle && nav) {
+    syncNavigationLabels(false);
+
     navToggle.addEventListener("click", () => {
         const isOpen = navToggle.getAttribute("aria-expanded") === "true";
 
@@ -38,14 +73,29 @@ if (header && navToggle && nav) {
             return;
         }
 
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         header.classList.add("nav-open");
+        document.body.classList.add("nav-open");
         navToggle.setAttribute("aria-expanded", "true");
+        syncNavigationLabels(true);
+
+        const currentLink = nav.querySelector('[aria-current="page"]');
+        const firstLink = nav.querySelector("a[href]");
+        const focusTarget = currentLink instanceof HTMLElement ? currentLink : firstLink;
+
+        if (focusTarget instanceof HTMLElement) {
+            focusTarget.focus();
+        }
     });
 
     nav.querySelectorAll("a").forEach((link) => {
         link.addEventListener("click", () => {
-            closeNavigation();
+            closeNavigation({ restoreFocus: false });
         });
+    });
+
+    navOverlay.addEventListener("click", () => {
+        closeNavigation();
     });
 
     document.addEventListener("click", (event) => {
@@ -65,13 +115,37 @@ if (header && navToggle && nav) {
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
             closeNavigation();
+            return;
+        }
+
+        if (event.key !== "Tab" || !header.classList.contains("nav-open")) {
+            return;
+        }
+
+        const focusable = getNavigationFocusables();
+
+        if (!focusable.length) {
+            return;
+        }
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+            return;
+        }
+
+        if (!event.shiftKey && document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
         }
     });
 
-    const largeViewport = window.matchMedia("(min-width: 960px)");
     const handleViewportChange = (event) => {
         if (event.matches) {
-            closeNavigation();
+            closeNavigation({ restoreFocus: false });
         }
     };
 
