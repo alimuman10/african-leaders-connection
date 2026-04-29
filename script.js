@@ -1,6 +1,24 @@
 const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-nav]");
+const revealSelectors = [
+    ".hero-copy",
+    ".hero-visual",
+    ".page-hero-shell > *",
+    ".section-heading > *",
+    ".feature",
+    ".panel",
+    ".path-card",
+    ".value-card",
+    ".quote-panel",
+    ".list-block",
+    ".story-note",
+    ".contact-card",
+    ".hero-stats li",
+    ".cta-band",
+    ".footer-shell > *"
+];
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const closeNavigation = () => {
     if (!header || !navToggle) {
@@ -63,6 +81,59 @@ if (header && navToggle && nav) {
         largeViewport.addListener(handleViewportChange);
     }
 }
+
+const syncHeaderState = () => {
+    if (!header) {
+        return;
+    }
+
+    header.classList.toggle("is-scrolled", window.scrollY > 18);
+};
+
+const initializeRevealAnimations = () => {
+    const revealTargets = document.querySelectorAll(revealSelectors.join(", "));
+
+    if (!revealTargets.length) {
+        return;
+    }
+
+    revealTargets.forEach((element, index) => {
+        element.classList.add("reveal-ready");
+        element.style.setProperty("--reveal-delay", `${(index % 6) * 70}ms`);
+    });
+
+    if (prefersReducedMotion.matches || typeof IntersectionObserver !== "function") {
+        revealTargets.forEach((element) => {
+            element.classList.add("is-visible");
+        });
+        return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+            });
+        },
+        {
+            threshold: 0.18,
+            rootMargin: "0px 0px -8% 0px"
+        }
+    );
+
+    revealTargets.forEach((element) => {
+        revealObserver.observe(element);
+    });
+};
+
+syncHeaderState();
+window.addEventListener("scroll", syncHeaderState, { passive: true });
+initializeRevealAnimations();
 
 document.querySelectorAll("[data-current-year]").forEach((node) => {
     node.textContent = new Date().getFullYear().toString();
