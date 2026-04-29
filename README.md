@@ -1,4 +1,4 @@
-# 🌍 AFRICAN LEADERS CONNECTIONS
+## 🌍 AFRICAN LEADERS CONNECTION
 
 > **Leadership. Unity. Progress.**
 
@@ -9,13 +9,23 @@
 
 ---
 
+## 🌐 Live Website
+
+🔗 https://alimuman10.github.io/african-leaders-connection/
+
+---
+
 ## 🚀 Project Overview
 
-**African Leaders Connections** is a professional leadership portfolio and blog-style platform created to celebrate African leadership, service, excellence, and progress.
+**African Leaders Connection** is a professional leadership portfolio and blog-style platform created to celebrate African leadership, service, excellence, and progress.
 
-This project was developed as a capstone portfolio website and redesigned in my own professional way to represent my identity as an **Ambassador of Leadership**.
+This project was developed as a capstone portfolio website and redesigned to represent my identity as an **Ambassador of Leadership**.
 
-The platform focuses on leadership stories, African success, personal growth, community impact, and positive transformation across all works of life.
+The platform focuses on:
+- Leadership storytelling  
+- African success narratives  
+- Personal growth and development  
+- Community impact and transformation  
 
 ---
 
@@ -27,48 +37,45 @@ To create a digital platform that inspires, educates, and connects people throug
 
 ## 🌍 Vision
 
-To grow **African Leaders Connections** into a global leadership platform that celebrates African leaders, empowers young people, and promotes leadership excellence across Africa and beyond.
+To grow **African Leaders Connection** into a global leadership platform that:
+- Celebrates African leaders  
+- Empowers young people  
+- Promotes leadership excellence across Africa and beyond  
 
 ---
 
 ## 🖼️ Project Preview
 
-![African Leaders Connections Preview](screenshot.png)
+![African Leaders Connection Preview](screenshot.png)
 
 ---
 
 ## ✨ Key Features
 
-- Professional leadership portfolio homepage
-- Multi-page website structure
-- Navigation links for Home, Hobbies, and Contact
-- Personal leadership branding
-- African leadership-focused content
-- Clean and modern portfolio presentation
-- Contact information for collaboration and networking
+- Professional leadership portfolio homepage  
+- Multi-page website structure  
+- Navigation system (Home, Hobbies, Contact)  
+- Personal leadership branding  
+- Clean and modern UI design  
+- Fully responsive layout foundation  
+- Contact and collaboration access  
 
 ---
 
 ## 📄 Pages Included
 
 | Page | Description |
-|---|---|
-| `index.html` | Main homepage and leadership profile |
-| `hobbies.html` | Personal interests, including web development |
+|------|------------|
+| `index.html` | Homepage and leadership profile |
+| `hobbies.html` | Professional interests and personal development |
 | `contact.html` | Contact information and collaboration details |
 
 ---
 
 ## 🛠️ Technologies Used
 
-- HTML5
-- CSS3
-
----
-
-## License
-
-This project is licensed under the MIT License. See `LICENSE` for details.
+- HTML5  
+- CSS3  
 
 ---
 
@@ -77,14 +84,72 @@ This project is licensed under the MIT License. See `LICENSE` for details.
 ```bash
 african-leaders-connection/
 │
-├── assets/
-│   └── css/
-│       └── styles.css
 ├── index.html
 ├── hobbies.html
 ├── contact.html
+├── styles.css
 ├── profile.jpg
 ├── screenshot.png
 ├── README.md
 └── LICENSE
-```
+````
+
+---
+
+## 👤 Author
+
+**Alimu Mansaray**
+
+📧 Email: [mansarayalimu903@gmail.com](mailto:mansarayalimu903@gmail.com)
+📞 Phone: +23279101090
+🌍 Location: Sierra Leone
+
+---
+
+## 🤝 Collaboration
+
+I am open to:
+
+* Leadership discussions
+* Blog collaborations
+* Web development opportunities
+* Digital branding projects
+* Community leadership partnerships
+* African leadership storytelling
+
+---
+
+## 🚀 Future Improvements
+
+Planned upgrades include:
+
+* Expanding leadership blog content
+* Improving mobile responsiveness
+* Building a full blog system
+* Converting into a React-based application
+* Integrating a backend (Laravel / Node.js)
+* Developing a full African leadership community platform
+
+---
+
+## ⭐ Support
+
+If you find this project valuable:
+
+* ⭐ Star the repository
+* 🔁 Share with your network
+* 👤 Follow for future updates
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+## 📢 Final Statement
+
+**African Leaders Connection** represents a vision to celebrate leadership, inspire transformation, and promote African excellence globally.
+
+> **Leadership. Unity. Progress.**
