@@ -15,6 +15,8 @@ const revealSelectors = [
     ".list-block",
     ".story-note",
     ".contact-card",
+    ".contact-info-panel",
+    ".contact-form-card",
     ".hero-stats li",
     ".cta-band",
     ".footer-shell > *"
@@ -208,6 +210,118 @@ const initializeRevealAnimations = () => {
 syncHeaderState();
 window.addEventListener("scroll", syncHeaderState, { passive: true });
 initializeRevealAnimations();
+
+const initializeContactForm = () => {
+    const form = document.querySelector("[data-contact-form]");
+
+    if (!(form instanceof HTMLFormElement)) {
+        return;
+    }
+
+    const status = form.querySelector("[data-form-status]");
+    const fields = {
+        fullName: form.elements.namedItem("fullName"),
+        email: form.elements.namedItem("email"),
+        subject: form.elements.namedItem("subject"),
+        message: form.elements.namedItem("message")
+    };
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const getValue = (field) => field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement
+        ? field.value.trim()
+        : "";
+
+    const setFieldError = (name, message) => {
+        const field = fields[name];
+        const error = form.querySelector(`[data-error-for="${name}"]`);
+        const wrapper = field instanceof HTMLElement ? field.closest(".form-field") : null;
+
+        if (error) {
+            error.textContent = message;
+        }
+
+        if (wrapper) {
+            wrapper.classList.toggle("is-invalid", Boolean(message));
+        }
+
+        if (field instanceof HTMLElement) {
+            field.setAttribute("aria-invalid", message ? "true" : "false");
+        }
+    };
+
+    const validate = () => {
+        let isValid = true;
+
+        if (!getValue(fields.fullName)) {
+            setFieldError("fullName", "Please enter your full name.");
+            isValid = false;
+        } else {
+            setFieldError("fullName", "");
+        }
+
+        const emailValue = getValue(fields.email);
+        if (!emailValue) {
+            setFieldError("email", "Please enter your email address.");
+            isValid = false;
+        } else if (!emailPattern.test(emailValue)) {
+            setFieldError("email", "Please enter a valid email address.");
+            isValid = false;
+        } else {
+            setFieldError("email", "");
+        }
+
+        if (!getValue(fields.subject)) {
+            setFieldError("subject", "Please add a subject.");
+            isValid = false;
+        } else {
+            setFieldError("subject", "");
+        }
+
+        if (!getValue(fields.message)) {
+            setFieldError("message", "Please write a short message.");
+            isValid = false;
+        } else {
+            setFieldError("message", "");
+        }
+
+        return isValid;
+    };
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        if (status) {
+            status.textContent = "";
+            status.classList.remove("is-error");
+        }
+
+        if (!validate()) {
+            if (status) {
+                status.textContent = "Please review the highlighted fields and try again.";
+                status.classList.add("is-error");
+            }
+            return;
+        }
+
+        form.reset();
+
+        if (status) {
+            status.textContent = "Thank you for reaching out. Your message has been received, and I will respond as soon as possible.";
+        }
+    });
+
+    Object.values(fields).forEach((field) => {
+        if (field instanceof HTMLElement) {
+            field.addEventListener("input", () => {
+                if (field.getAttribute("aria-invalid") === "true") {
+                    validate();
+                }
+            });
+        }
+    });
+};
+
+initializeContactForm();
 
 document.querySelectorAll("[data-current-year]").forEach((node) => {
     node.textContent = new Date().getFullYear().toString();
