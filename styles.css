@@ -623,6 +623,12 @@ body.nav-open .nav-overlay {
     position: relative;
 }
 
+.hero-visual-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vw, 1.35rem);
+}
+
 .hero-seal,
 .story-note,
 .portrait-caption,
@@ -640,6 +646,7 @@ body.nav-open .nav-overlay {
 .hero-seal,
 .page-aside,
 .portrait-panel,
+.map-panel,
 .feature,
 .panel,
 .path-card,
@@ -712,7 +719,18 @@ body.nav-open .nav-overlay {
     box-shadow: var(--shadow-strong);
 }
 
-.portrait-panel::before {
+.map-panel {
+    aspect-ratio: 1 / 1;
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(223, 177, 91, 0.22);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+    box-shadow: var(--shadow-strong);
+}
+
+.portrait-panel::before,
+.map-panel::before {
     content: "";
     position: absolute;
     inset: -20% auto auto -14%;
@@ -723,13 +741,24 @@ body.nav-open .nav-overlay {
     filter: blur(16px);
 }
 
-.portrait-panel::after {
+.portrait-panel::after,
+.map-panel::after {
     content: "";
     position: absolute;
     inset: 1rem;
     border-radius: calc(var(--radius-lg) - 12px);
     border: 1px solid rgba(255, 255, 255, 0.14);
     pointer-events: none;
+}
+
+.map-panel img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: calc(var(--radius-lg) - 12px);
+    object-fit: contain;
+    object-position: center;
+    background: #24150d;
 }
 
 .portrait-panel img {
