@@ -57,6 +57,7 @@ To grow **African Leaders Connection** into a global Pan-African leadership plat
 - Multi-page platform architecture  
 - Clean and structured navigation system  
 - Sections for leadership, vision, stories, community, and projects  
+- Advocacy focus for youth empowerment, civic responsibility, ethical leadership, and African progress  
 - Personal leadership branding and identity  
 - Modern color system (dark green, bronze, cream, and gold)  
 - Responsive layout foundation  
@@ -72,7 +73,8 @@ To grow **African Leaders Connection** into a global Pan-African leadership plat
 | `index.html` | Homepage and main platform introduction |
 | `about.html` | Platform and founder background |
 | `leadership.html` | Leadership philosophy and values |
-| `vision.html` | Mission and long-term strategic direction |
+| `mission.html` | Mission and long-term strategic direction |
+| `advocacy.html` | Advocacy focus areas for leadership, civic responsibility, youth empowerment, and African progress |
 | `stories.html` | African leadership and success narratives |
 | `community.html` | Community engagement and collaboration |
 | `projects.html` | Leadership and development projects |
@@ -99,7 +101,8 @@ african-leaders-connection/
 ├── index.html              # Homepage and main platform landing page
 ├── about.html              # About the platform and founder background
 ├── leadership.html         # Leadership philosophy and values
-├── vision.html             # Mission and long-term direction
+├── mission.html            # Mission and long-term direction
+├── advocacy.html           # Advocacy focus areas and public impact
 ├── stories.html            # African leadership narratives
 ├── community.html          # Community engagement and collaboration
 ├── projects.html           # Leadership and development projects

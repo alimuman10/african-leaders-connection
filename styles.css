@@ -864,6 +864,8 @@ body.nav-open .nav-overlay {
 .editorial-grid,
 .duo-grid,
 .path-grid,
+.advocacy-grid,
+.advocacy-preview-grid,
 .contact-grid {
     display: grid;
     align-items: stretch;
@@ -873,7 +875,9 @@ body.nav-open .nav-overlay {
 
 .feature-grid,
 .value-grid,
-.path-grid {
+.path-grid,
+.advocacy-grid,
+.advocacy-preview-grid {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.75rem), 1fr));
 }
 
@@ -927,6 +931,93 @@ body.nav-open .nav-overlay {
 
 .panel p + p {
     margin-top: 0.05rem;
+}
+
+.section-action {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.35rem;
+}
+
+.advocacy-preview-card,
+.advocacy-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    min-height: 100%;
+    padding: 1.45rem;
+    border-radius: var(--radius-md);
+    background: #fffaf0;
+    border: 1px solid rgba(13, 33, 29, 0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+.advocacy-preview-card strong,
+.advocacy-card h3 {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.32rem;
+    line-height: 1.12;
+}
+
+.advocacy-preview-card p,
+.advocacy-card p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.68;
+}
+
+.advocacy-card {
+    background:
+        linear-gradient(180deg, #fffaf0, #f1eadf);
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.advocacy-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(171, 115, 40, 0.24);
+    box-shadow: 0 26px 58px rgba(10, 20, 18, 0.16);
+}
+
+.advocacy-card span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    color: #201508;
+    background: linear-gradient(135deg, #efc66f, var(--accent-gold));
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.advocacy-message {
+    max-width: 56rem;
+}
+
+.advocacy-message h2 {
+    margin: 0;
+    max-width: 15ch;
+    color: var(--text-inverse);
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 4.5vw, 3.8rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+
+.advocacy-message p:not(.section-mark) {
+    max-width: 48rem;
+    margin: 1rem 0 0;
+    color: var(--text-inverse-soft);
+    font-size: 1.06rem;
+    line-height: 1.78;
 }
 
 .panel > img {
@@ -1753,6 +1844,10 @@ body.nav-open .nav-overlay {
         transition-delay: 310ms;
     }
 
+    .site-header.nav-open .site-nav a:nth-child(11) {
+        transition-delay: 340ms;
+    }
+
     .site-nav a:hover,
     .site-nav a:focus-visible {
         background: rgba(255, 255, 255, 0.08);
@@ -1870,6 +1965,8 @@ body.nav-open .nav-overlay {
     .feature,
     .panel,
     .path-card,
+    .advocacy-preview-card,
+    .advocacy-card,
     .contact-card,
     .contact-info-panel,
     .contact-form-card,
