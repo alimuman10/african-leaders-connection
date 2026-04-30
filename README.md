@@ -3,64 +3,65 @@
 > **Leadership. Unity. Progress.**
 
 ![HTML](https://img.shields.io/badge/HTML-100%25-orange)
+![CSS](https://img.shields.io/badge/CSS-Modern%20Responsive-blue)
 ![Status](https://img.shields.io/badge/Project-Live-success)
-![Portfolio](https://img.shields.io/badge/Type-Leadership%20Portfolio-blue)
+![Type](https://img.shields.io/badge/Type-Pan--African%20Leadership%20Platform-gold)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
 
 ## 🌐 Live Website
 
-🔗 https://alimuman10.github.io/african-leaders-connection/
+🔗 **Website:** https://alimuman10.github.io/african-leaders-connection/
 
 ---
 
 ## 🚀 Project Overview
 
-**African Leaders Connection** is a professional leadership portfolio and blog-style platform created to celebrate African leadership, service, excellence, and progress.
+**African Leaders Connection** is a professional Pan-African leadership platform designed to celebrate African excellence, principled leadership, purposeful service, and community progress.
 
-This project was developed as a capstone portfolio website and redesigned to represent my identity as an **Ambassador of Leadership**.
+The platform delivers a refined digital experience built around leadership storytelling, African identity, personal growth, community impact, and meaningful collaboration across emerging networks.
 
-The platform focuses on:
-
-- Leadership storytelling
-- African success narratives
-- Personal growth and development
-- Community impact and transformation
+This project represents a professional leadership brand and digital platform, reflecting my identity as an **Ambassador of Leadership** and my commitment to advancing transformation across Africa and beyond.
 
 ---
 
 ## 🎯 Mission
 
-To create a digital platform that inspires, educates, and connects people through leadership-focused content, African success stories, and values that promote unity, responsibility, and progress.
+To inspire, educate, and connect people through leadership-driven content, African success stories, and values rooted in service, responsibility, and progress.
 
 ---
 
 ## 🌍 Vision
 
-To grow **African Leaders Connection** into a global leadership platform that:
+To grow **African Leaders Connection** into a global Pan-African leadership platform that:
 
-- Celebrates African leaders
-- Empowers young people
-- Promotes leadership excellence across Africa and beyond
+- Celebrates African leaders and changemakers  
+- Empowers young people and emerging professionals  
+- Promotes leadership excellence across Africa and beyond  
+- Encourages service, innovation, and collaboration  
+- Builds a trusted digital ecosystem for African leadership  
 
 ---
 
 ## 🖼️ Project Preview
 
-![African Leaders Connection Preview](screenshot.png)
+![African Leaders Connection Homepage Preview](screenshort2.png)
 
 ---
 
 ## ✨ Key Features
 
-- Professional leadership portfolio homepage
-- Multi-page website structure
-- Navigation system: Home, Hobbies, and Contact
-- Personal leadership branding
-- Clean and modern UI design
-- Responsive layout foundation
-- Contact and collaboration access
+- Premium Pan-African leadership homepage  
+- Professionally designed hero section with African-inspired branding  
+- Multi-page platform architecture  
+- Clean and structured navigation system  
+- Sections for leadership, vision, stories, community, and projects  
+- Personal leadership branding and identity  
+- Modern color system (dark green, bronze, cream, and gold)  
+- Responsive layout foundation  
+- Contact and collaboration access  
+- Elegant, minimal, and professional UI  
 
 ---
 
@@ -68,16 +69,25 @@ To grow **African Leaders Connection** into a global leadership platform that:
 
 | Page | Description |
 |------|-------------|
-| `index.html` | Homepage and leadership profile |
-| `hobbies.html` | Professional interests and personal development |
-| `contact.html` | Contact information and collaboration details |
+| `index.html` | Homepage and main platform introduction |
+| `about.html` | Platform and founder background |
+| `leadership.html` | Leadership philosophy and values |
+| `vision.html` | Mission and long-term strategic direction |
+| `stories.html` | African leadership and success narratives |
+| `community.html` | Community engagement and collaboration |
+| `projects.html` | Leadership and development projects |
+| `hobbies.html` | Personal growth and professional interests |
+| `blog.html` | Articles, insights, and leadership reflections |
+| `contact.html` | Contact and collaboration details |
 
 ---
 
 ## 🛠️ Technologies Used
 
-- HTML5
-- CSS3
+- HTML5  
+- CSS3  
+- Responsive Web Design  
+- GitHub Pages  
 
 ---
 
@@ -86,14 +96,24 @@ To grow **African Leaders Connection** into a global leadership platform that:
 ```bash
 african-leaders-connection/
 │
-├── index.html
-├── hobbies.html
-├── contact.html
-├── styles.css
-├── profile.jpg
-├── screenshot.png
-├── README.md
-└── LICENSE
+├── index.html              # Homepage and main platform landing page
+├── about.html              # About the platform and founder background
+├── leadership.html         # Leadership philosophy and values
+├── vision.html             # Mission and long-term direction
+├── stories.html            # African leadership narratives
+├── community.html          # Community engagement and collaboration
+├── projects.html           # Leadership and development projects
+├── hobbies.html            # Personal development and interests
+├── blog.html               # Blog and leadership insights
+├── contact.html            # Contact information
+│
+├── styles.css              # Main stylesheet and responsive design
+│
+├── profile.jpg             # Founder profile image
+├── screenshort2.png        # Updated homepage preview image
+│
+├── README.md               # Project documentation
+└── LICENSE                 # MIT License
 ````
 
 ---
@@ -113,11 +133,11 @@ african-leaders-connection/
 I am open to:
 
 * Leadership discussions
-* Blog collaborations
+* Blog and content collaborations
 * Web development opportunities
-* Digital branding projects
+* Digital branding and platform development
 * Community leadership partnerships
-* African leadership storytelling
+* African storytelling and innovation initiatives
 
 ---
 
@@ -126,10 +146,12 @@ I am open to:
 Planned upgrades include:
 
 * Expanding leadership blog content
-* Improving mobile responsiveness
-* Building a full blog system
-* Converting into a React-based application
-* Integrating a backend using Laravel or Node.js
+* Enhancing mobile responsiveness across all pages
+* Adding more African leadership stories
+* Building a full blog publishing system
+* Transitioning to a React-based frontend
+* Integrating backend systems (Laravel / Node.js)
+* Adding authentication and user engagement features
 * Developing a full African leadership community platform
 
 ---
@@ -141,6 +163,7 @@ If you find this project valuable:
 * ⭐ Star the repository
 * 🔁 Share with your network
 * 👤 Follow for future updates
+* 🌍 Support African leadership and innovation
 
 ---
 
@@ -148,38 +171,12 @@ If you find this project valuable:
 
 This project is licensed under the **MIT License**.
 
-For full license details, see the [LICENSE](LICENSE) file.
-
-### MIT License
-
-```text
-MIT License
-
-Copyright (c) 2026 African Leaders Connection
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+For full details, see the [LICENSE](LICENSE) file.
 
 ---
 
 ## 📢 Final Statement
 
-**African Leaders Connection** represents a vision to celebrate leadership, inspire transformation, and promote African excellence globally.
+**African Leaders Connection** is more than a website — it is a growing vision to connect leaders, inspire purpose, and promote African progress on a global stage.
 
 > **Leadership. Unity. Progress.**
