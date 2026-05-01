@@ -11,7 +11,7 @@ const revealSelectors = [
     ".panel",
     ".path-card",
     ".advocacy-preview-card",
-    ".advocacy-card",
+    ".advocacy-focus-card",
     ".advocacy-message",
     ".value-card",
     ".quote-panel",
