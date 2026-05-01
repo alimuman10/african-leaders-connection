@@ -34,6 +34,35 @@ navOverlay.tabIndex = -1;
 navOverlay.setAttribute("aria-hidden", "true");
 document.body.append(navOverlay);
 
+const normalizePath = (path) => {
+    if (!path || path.endsWith("/")) {
+        return "index.html";
+    }
+
+    const fileName = path.split("/").filter(Boolean).pop() || "index.html";
+
+    return fileName.includes(".") ? fileName : "index.html";
+};
+
+const syncActiveNavigationLink = () => {
+    if (!nav) {
+        return;
+    }
+
+    const currentPage = normalizePath(window.location.pathname);
+
+    nav.querySelectorAll("a[href]").forEach((link) => {
+        const linkTarget = normalizePath(link.getAttribute("href") || "");
+        const isCurrentPage = linkTarget === currentPage || (currentPage === "index.html" && linkTarget === "");
+
+        if (isCurrentPage) {
+            link.setAttribute("aria-current", "page");
+        } else {
+            link.removeAttribute("aria-current");
+        }
+    });
+};
+
 const getNavigationFocusables = () => {
     if (!navToggle || !nav) {
         return [];
@@ -47,7 +76,13 @@ const syncNavigationLabels = (isOpen) => {
         return;
     }
 
+    const label = navToggle.querySelector("span:first-child");
+
     navToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+
+    if (label) {
+        label.textContent = isOpen ? "Close" : "Menu";
+    }
 };
 
 const closeNavigation = ({ restoreFocus = true } = {}) => {
@@ -68,7 +103,14 @@ const closeNavigation = ({ restoreFocus = true } = {}) => {
 };
 
 if (header && navToggle && nav) {
+    if (!nav.id) {
+        nav.id = "primary-navigation";
+    }
+
+    navToggle.setAttribute("aria-controls", nav.id);
+    navToggle.setAttribute("aria-expanded", "false");
     syncNavigationLabels(false);
+    syncActiveNavigationLink();
 
     navToggle.addEventListener("click", () => {
         const isOpen = navToggle.getAttribute("aria-expanded") === "true";
@@ -118,7 +160,7 @@ if (header && navToggle && nav) {
     });
 
     document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
+        if (event.key === "Escape" && header.classList.contains("nav-open")) {
             closeNavigation();
             return;
         }
