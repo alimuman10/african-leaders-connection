@@ -1090,6 +1090,13 @@ body.nav-open .nav-overlay {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
 }
 
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+    gap: clamp(1.25rem, 2vw, 1.75rem);
+    align-items: stretch;
+}
+
 .feature,
 .panel,
 .path-card,
@@ -1142,6 +1149,53 @@ body.nav-open .nav-overlay {
 
 .panel p + p {
     margin-top: 0.05rem;
+}
+
+.service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    min-height: 100%;
+    padding: clamp(1.4rem, 2.4vw, 1.8rem);
+    background: #ffffff;
+    border: 1px solid rgba(18, 33, 31, 0.12);
+    border-radius: 10px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.07);
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(18, 33, 31, 0.2);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.55rem;
+    height: 2.55rem;
+    border-radius: 50%;
+    color: #1a241f;
+    background: #f2cf86;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+}
+
+.service-card h3 {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1.8vw, 1.38rem);
+    line-height: 1.2;
+}
+
+.service-card p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.68;
 }
 
 .section-action {
@@ -1284,6 +1338,95 @@ body.nav-open .nav-overlay {
     color: var(--text-inverse-soft);
     font-size: 1.06rem;
     line-height: 1.78;
+}
+
+.section-advocacy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    padding: 100px 40px;
+    background: #ffffff;
+}
+
+.section-advocacy .advocacy-content {
+    max-width: 520px;
+}
+
+.section-advocacy .advocacy-content h2 {
+    margin: 0;
+    color: #111827;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-wrap: balance;
+}
+
+.section-advocacy .advocacy-content p {
+    margin: 15px 0 0;
+    color: #4b5563;
+    line-height: 1.7;
+}
+
+.section-advocacy .section-action {
+    justify-content: flex-start;
+    margin-top: 1.5rem;
+}
+
+.section-advocacy .advocacy-image-card {
+    width: 600px;
+    height: 300px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+    overflow: hidden;
+    transition: none;
+}
+
+.section-advocacy .advocacy-image-card:hover {
+    transform: none;
+    border-color: transparent;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.section-advocacy .advocacy-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .section-advocacy {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 70px 20px;
+    }
+
+    .section-advocacy .advocacy-content {
+        max-width: none;
+    }
+
+    .section-advocacy .advocacy-content h2 {
+        font-size: clamp(1.6rem, 7vw, 2.1rem);
+    }
+
+    .section-advocacy .advocacy-image-card {
+        justify-self: stretch;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2 / 1;
+    }
 }
 
 .panel > img {
@@ -3206,5 +3349,191 @@ body::after,
     .nav-overlay,
     .menu-toggle-bars span {
         transition: none !important;
+    }
+}
+
+/* Advocacy page and centered global footer */
+.advocacy-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+}
+
+.advocacy-hero-content {
+    max-width: 560px;
+}
+
+.advocacy-hero-content h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.15;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: 0;
+    text-wrap: balance;
+}
+
+.advocacy-hero-content p:not(.eyebrow) {
+    margin-top: 18px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #4b5563;
+}
+
+.advocacy-hero-content .button,
+.advocacy-hero-content .btn-primary {
+    margin-top: 1.6rem;
+}
+
+.advocacy-hero .advocacy-image-card {
+    width: 600px;
+    height: 300px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 0;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+    overflow: hidden;
+    transition: none;
+}
+
+.advocacy-hero .advocacy-image-card:hover {
+    transform: none;
+    border-color: transparent;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.advocacy-hero .advocacy-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+    background: #ffffff;
+}
+
+.advocacy-statement-section {
+    padding: 90px 20px;
+    background: #0f172a;
+}
+
+.advocacy-statement {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.advocacy-statement .section-mark {
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--accent-gold);
+}
+
+.advocacy-statement h2 {
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3vw, 2.7rem);
+    line-height: 1.32;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-wrap: balance;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 50px 20px;
+    background: #0f172a;
+    color: #ffffff;
+}
+
+.footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.site-footer .footer-brand {
+    display: block;
+    margin: 0;
+}
+
+.footer-brand h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.footer-brand p {
+    margin: 8px 0 0;
+    color: #cbd5e1;
+}
+
+.footer-links,
+.footer-contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 28px 0;
+}
+
+.footer-contact-links {
+    margin: 0 0 26px;
+}
+
+.footer-links a,
+.footer-contact-links a {
+    color: #e5e7eb;
+    text-decoration: none;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.footer-links a:hover,
+.footer-contact-links a:hover {
+    color: #fbbf24;
+}
+
+.footer-copy {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .advocacy-hero {
+        grid-template-columns: 1fr;
+        padding: 70px 20px;
+        gap: 35px;
+        text-align: center;
+    }
+
+    .advocacy-hero-content {
+        margin: 0 auto;
+    }
+
+    .advocacy-hero .advocacy-image-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2 / 1;
+        justify-self: stretch;
+    }
+
+    .footer-links,
+    .footer-contact-links {
+        gap: 14px;
     }
 }
