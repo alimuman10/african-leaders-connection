@@ -905,44 +905,25 @@ body.nav-open .nav-overlay {
 }
 
 .advocacy-hero {
-    padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(2.7rem, 6vw, 5rem);
+    padding: clamp(3rem, 7vw, 5rem) 0 clamp(3.5rem, 7vw, 5.5rem);
+    background: linear-gradient(180deg, #fbfaf6 0%, #f4f2ea 100%);
 }
 
-.advocacy-poster {
-    width: min(100%, 58rem);
-    margin: 0 auto;
-    padding: clamp(0.75rem, 1.8vw, 1.15rem);
-    border-radius: 28px;
-    color: var(--text-inverse);
-    background: linear-gradient(135deg, rgba(22, 35, 32, 0.92), rgba(15, 25, 23, 0.88));
-    border: 1px solid rgba(223, 177, 91, 0.24);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.advocacy-poster-image {
-    margin: 0;
-    overflow: hidden;
-    border: 5px solid #f1dfbd;
-    border-radius: 22px;
-    background: #1b1209;
-    box-shadow: none;
-}
-
-.advocacy-poster-image img {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    object-position: center;
-    background: #070d0c;
+.advocacy-hero-grid {
+    display: grid;
+    width: min(100%, 1320px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 2.5rem);
 }
 
 .advocacy-content {
     display: grid;
     justify-items: start;
-    gap: 0.9rem;
-    max-width: 31rem;
+    gap: 1.05rem;
+    max-width: 36rem;
     margin: 0;
-    padding: 0.3rem clamp(0.3rem, 2vw, 1.2rem) 0.6rem;
+    padding: 0;
     text-align: left;
 }
 
@@ -952,20 +933,96 @@ body.nav-open .nav-overlay {
 
 .advocacy-content h1 {
     margin: 0;
-    max-width: 16ch;
+    max-width: 20ch;
     font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5.8vw, 5rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.45rem, 4.4vw, 4.25rem);
+    line-height: 1.04;
+    letter-spacing: 0;
     text-wrap: balance;
+    color: var(--text-strong);
 }
 
 .advocacy-content p {
-    max-width: 43rem;
+    max-width: 34rem;
     margin: 0;
-    color: rgba(244, 239, 227, 0.8);
-    font-size: clamp(1rem, 1.4vw, 1.12rem);
+    color: var(--text-soft);
+    font-size: clamp(1rem, 1.25vw, 1.1rem);
     line-height: 1.72;
+}
+
+.advocacy-content .section-action {
+    justify-content: flex-start;
+    margin-top: 0.65rem;
+}
+
+.advocacy-image-card {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    max-width: 100%;
+    height: 350px;
+    aspect-ratio: 3 / 2;
+    margin: 0;
+    overflow: hidden;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba(18, 33, 31, 0.1);
+    box-shadow: 0 8px 20px rgba(18, 33, 31, 0.08);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.advocacy-image-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(18, 33, 31, 0.16);
+    box-shadow: 0 14px 28px rgba(18, 33, 31, 0.1);
+}
+
+.advocacy-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .advocacy-hero-grid {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        gap: clamp(2rem, 4vw, 3rem);
+    }
+
+    .advocacy-image-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .advocacy-hero {
+        padding: 3rem 0 3.5rem;
+    }
+
+    .advocacy-hero-grid {
+        grid-template-columns: 1fr;
+        gap: clamp(1.5rem, 6vw, 1.875rem);
+    }
+
+    .advocacy-content {
+        max-width: 42rem;
+    }
+
+    .advocacy-image-card {
+        justify-self: start;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 2;
+        padding: 0.6rem;
+    }
 }
 
 .feature-grid,
@@ -1109,6 +1166,66 @@ body.nav-open .nav-overlay {
     background: linear-gradient(135deg, #efc66f, var(--accent-gold));
     font-size: 0.82rem;
     font-weight: 900;
+}
+
+/* Advocacy Image Grid System */
+.advocacy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    align-items: stretch;
+}
+
+/* Advocacy Card Container */
+.advocacy-card {
+    overflow: hidden;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.advocacy-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Advocacy Image Styling */
+.advocacy-image {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.advocacy-card:hover .advocacy-image {
+    transform: scale(1.05);
+}
+
+/* Responsive Grid - Mobile */
+@media (max-width: 768px) {
+    .advocacy-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Responsive Grid - Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .advocacy-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Responsive Grid - Desktop */
+@media (min-width: 1025px) {
+    .advocacy-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
 }
 
 .advocacy-message {
@@ -2026,10 +2143,6 @@ body.nav-open .nav-overlay {
         grid-template-columns: 1fr;
     }
 
-    .advocacy-poster-image img {
-        aspect-ratio: 3 / 2;
-        object-position: center;
-    }
 }
 
 @media (max-width: 720px) {
@@ -2091,21 +2204,6 @@ body.nav-open .nav-overlay {
 
     .section-heading h2 {
         font-size: clamp(1.9rem, 8.8vw, 2.7rem);
-    }
-
-    .advocacy-poster {
-        border-radius: 24px;
-        padding: 0.75rem;
-    }
-
-    .advocacy-poster-image {
-        border-width: 4px;
-        border-radius: 18px;
-    }
-
-    .advocacy-poster-image img {
-        aspect-ratio: 3 / 2;
-        border-radius: 14px;
     }
 
     .advocacy-content h1 {
@@ -2388,13 +2486,6 @@ body.nav-open .nav-overlay {
     background: #0b211d;
     border: 1px solid rgba(223, 177, 91, 0.18);
     box-shadow: 0 16px 36px rgba(3, 8, 7, 0.18);
-}
-
-.map-panel,
-.portrait-panel,
-.advocacy-poster,
-.advocacy-poster-image,
-.cta-band {
 }
 
 .map-panel,
@@ -2705,7 +2796,6 @@ body.nav-open .nav-overlay {
 .portrait-caption,
 .contact-info-panel,
 .footer-shell,
-.advocacy-poster,
 .cta-band {
     background: #0b211d;
     border-color: rgba(223, 177, 91, 0.26);
