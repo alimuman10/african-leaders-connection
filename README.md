@@ -54,7 +54,7 @@ African Leaders Connection is structured to support African leadership across in
    Policy advisory, institutional development, organizational leadership consulting, and strategy and decision-making frameworks.
 
 3. Digital Transformation Services
-   Website development, web application development, platform development, and UI/UX design systems using modern stacks such as React, Laravel, and related technologies.
+   Website development, static web experiences, platform design, and UI/UX systems using modern frontend technologies.
 
 4. Digital Marketing & Visibility
    Social media strategy, personal brand building for leaders, content marketing, SEO optimization, and campaign strategy.
@@ -81,9 +81,8 @@ African Leaders Connection is structured to support African leadership across in
 Future platform expansion may include:
 
 - React frontend
-- Laravel backend
-- APIs and integrations
-- Authentication and dashboards
+- Frontend integrations
+- Interactive dashboards
 - Community management systems
 
 ## Vision for Expansion
