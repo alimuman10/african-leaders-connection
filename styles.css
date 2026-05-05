@@ -2274,6 +2274,10 @@ body.nav-open .nav-overlay {
         transition-delay: 340ms;
     }
 
+    .site-header.nav-open .site-nav a:nth-child(12) {
+        transition-delay: 370ms;
+    }
+
     .site-nav a:hover,
     .site-nav a:focus-visible {
         background: rgba(255, 255, 255, 0.08);
@@ -2545,6 +2549,40 @@ body.nav-open .nav-overlay {
 .site-nav a:focus-visible::before,
 .site-nav a[aria-current="page"]::before {
     transform: scaleX(1);
+}
+
+.site-nav a.nav-auth {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    margin-left: 0.2rem;
+    padding: 0.58rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 800;
+}
+
+.site-nav a.nav-auth::before {
+    display: none;
+}
+
+.site-nav a.nav-auth-secondary {
+    color: #fffaf0;
+    background: #173a33;
+    border-color: #2f5a50;
+}
+
+.site-nav a.nav-auth-primary {
+    color: #1d1305;
+    background: #dfb15b;
+    border-color: #b98231;
+}
+
+.site-nav a.nav-auth:hover,
+.site-nav a.nav-auth:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 32px rgba(2, 7, 6, 0.22);
 }
 
 .hero-home {
