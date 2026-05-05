@@ -178,6 +178,12 @@ textarea {
     border-color: rgba(255, 250, 240, 0.38);
 }
 
+.button-outline-dark {
+    color: var(--deep-soft);
+    background: #fffaf0;
+    border-color: rgba(16, 33, 30, 0.18);
+}
+
 .button-row {
     display: flex;
     flex-wrap: wrap;
@@ -471,6 +477,12 @@ textarea {
 .summary-list dd {
     margin: 0.2rem 0 0;
     overflow-wrap: anywhere;
+}
+
+.action-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0;
 }
 
 .site-footer {

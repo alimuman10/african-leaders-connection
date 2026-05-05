@@ -13,7 +13,7 @@
 
     <section class="section">
         <div class="shell dashboard-grid">
-            <article class="info-card">
+            <article class="info-card" id="profile">
                 <h2>Profile Summary</h2>
                 <dl class="summary-list">
                     <div><dt>Name</dt><dd>{{ $user->name }}</dd></div>
@@ -25,17 +25,26 @@
             </article>
 
             <article class="info-card">
-                <h2>My Account</h2>
-                <p>Account settings, profile updates, and member preferences will live here as the platform grows.</p>
+                <h2>Account Status</h2>
+                <p>Your account is active and ready for future role-based member features.</p>
+                <dl class="summary-list">
+                    <div><dt>Status</dt><dd>{{ ucfirst($user->status ?? 'active') }}</dd></div>
+                    <div><dt>Email Verification</dt><dd>{{ $user->email_verified_at ? 'Verified' : 'Ready for verification' }}</dd></div>
+                    <div><dt>Last Login</dt><dd>{{ $user->last_login_at?->format('M j, Y g:i A') ?: 'First session' }}</dd></div>
+                </dl>
+            </article>
+
+            <article class="info-card">
+                <h2>Quick Actions</h2>
+                <div class="action-list">
+                    <a class="button button-outline-dark" href="#profile">View Profile</a>
+                    <a class="button button-outline-dark" href="{{ route('contact') }}">Contact Support</a>
+                    <a class="button button-outline-dark" href="{{ route('home') }}">Return Home</a>
+                </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="button button-secondary" type="submit">Logout</button>
                 </form>
-            </article>
-
-            <article class="info-card">
-                <h2>Messages / Contact History</h2>
-                <p>Your future service inquiries, partnership conversations, and platform messages can be organized here.</p>
             </article>
         </div>
     </section>

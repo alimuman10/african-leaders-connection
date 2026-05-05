@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): View
+    public function index(Request $request): View
     {
-        return view('pages.dashboard', [
+        return view('dashboard.index', [
             'user' => $request->user(),
         ]);
     }

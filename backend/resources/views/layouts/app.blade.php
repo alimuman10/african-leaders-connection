@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'African Leaders Connection')</title>
     <meta name="description" content="@yield('description', 'African Leaders Connection is a professional Pan-African leadership and innovation platform.')">
-    @vite(['resources/css/app.css', 'resources/js/bootstrap.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
