@@ -1,7 +1,12 @@
 export async function apiRequest(path, options = {}) {
     const token = sessionStorage.getItem('alc_token') || localStorage.getItem('alc_token');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const xsrfToken = readCookie('XSRF-TOKEN');
     const headers = {
         Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
+        ...(xsrfToken ? { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken) } : {}),
         ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {}),
@@ -27,4 +32,13 @@ export async function apiRequest(path, options = {}) {
 
 export function collectionFrom(payload) {
     return Array.isArray(payload?.data) ? payload.data : [];
+}
+
+function readCookie(name) {
+    return document.cookie
+        .split('; ')
+        .find((cookie) => cookie.startsWith(`${name}=`))
+        ?.split('=')
+        .slice(1)
+        .join('=');
 }
