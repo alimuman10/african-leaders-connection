@@ -5,9 +5,19 @@
 @section('content')
     <section class="auth-section">
         <div class="auth-card">
+            <a class="auth-brand" href="{{ route('home') }}" aria-label="African Leaders Connection home">
+                <img src="{{ asset('assets/images/brand-icon-square.png') }}" alt="">
+                <span>African Leaders Connection</span>
+            </a>
             <p class="eyebrow">Sign In</p>
             <h1>Welcome back.</h1>
             <p>Access your African Leaders Connection account securely.</p>
+
+            @if ($errors->any())
+                <div class="alert alert-error" role="alert">
+                    Please check your email and password, then try again.
+                </div>
+            @endif
 
             <form method="POST" action="{{ route('login') }}" novalidate>
                 @csrf

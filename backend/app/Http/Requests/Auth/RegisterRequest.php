@@ -14,7 +14,7 @@ class RegisterRequest extends FormRequest
 
     public function rules(): array
     {
-        $password = Password::min(10)->letters()->mixedCase()->numbers()->symbols();
+        $password = Password::min(8)->letters()->mixedCase()->numbers();
 
         if (! app()->environment('testing')) {
             $password->uncompromised();

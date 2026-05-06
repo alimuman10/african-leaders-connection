@@ -8,7 +8,11 @@
     <meta name="description" content="@yield('description', 'African Leaders Connection is a professional Pan-African leadership and innovation platform.')">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon-32.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/apple-touch-icon.png') }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if (file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    @endif
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
