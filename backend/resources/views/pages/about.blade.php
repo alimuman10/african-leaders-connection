@@ -14,19 +14,24 @@
     </section>
 
     <section class="section">
-        <div class="shell card-grid">
-            <article class="info-card">
-                <h3>Mission</h3>
-                <p>To connect and equip leaders who turn values into practical service, responsible institutions, and measurable progress.</p>
-            </article>
-            <article class="info-card">
-                <h3>Vision</h3>
-                <p>A stronger African leadership ecosystem where visibility, capacity, and collaboration help communities move forward.</p>
-            </article>
-            <article class="info-card">
-                <h3>Values</h3>
-                <p>Service, unity, accountability, innovation, and public-minded leadership.</p>
-            </article>
+        <div class="shell split-layout">
+            <figure class="media-card">
+                <img src="{{ asset('assets/images/profile.jpg') }}" alt="African Leaders Connection founder profile portrait">
+            </figure>
+            <div class="card-grid single-column">
+                <article class="info-card">
+                    <h3>Mission</h3>
+                    <p>To connect and equip leaders who turn values into practical service, responsible institutions, and measurable progress.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Vision</h3>
+                    <p>A stronger African leadership ecosystem where visibility, capacity, and collaboration help communities move forward.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Values</h3>
+                    <p>Service, unity, accountability, innovation, and public-minded leadership.</p>
+                </article>
+            </div>
         </div>
     </section>
 @endsection

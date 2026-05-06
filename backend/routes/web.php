@@ -17,6 +17,13 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/mission', [HomeController::class, 'mission'])->name('mission');
+Route::get('/leadership', [HomeController::class, 'leadership'])->name('leadership');
+Route::get('/advocacy', [HomeController::class, 'advocacy'])->name('advocacy');
+Route::get('/stories', [HomeController::class, 'stories'])->name('stories');
+Route::get('/projects', [HomeController::class, 'projects'])->name('projects');
+Route::get('/services', [HomeController::class, 'services'])->name('services');
+Route::get('/community', [HomeController::class, 'community'])->name('community');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
 

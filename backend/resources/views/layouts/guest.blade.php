@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'African Leaders Connection')</title>
     <meta name="description" content="@yield('description', 'Secure access to African Leaders Connection.')">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon-32.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>

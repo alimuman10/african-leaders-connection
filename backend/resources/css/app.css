@@ -102,11 +102,20 @@ textarea {
     place-items: center;
     width: 46px;
     height: 46px;
+    overflow: hidden;
+    padding: 0.18rem;
     border: 1px solid rgba(223, 177, 91, 0.45);
     border-radius: 10px;
     color: #221704;
-    background: var(--gold);
+    background: #071512;
     font-weight: 900;
+}
+
+.brand-mark img {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    object-fit: cover;
 }
 
 .brand strong,
@@ -280,6 +289,60 @@ textarea {
 .summary-list dd {
     color: var(--muted);
     line-height: 1.65;
+}
+
+.media-card {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(223, 177, 91, 0.2);
+    border-radius: var(--radius);
+    background: #fffef8;
+    box-shadow: var(--shadow);
+}
+
+.media-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+}
+
+.hero-media img {
+    min-height: 420px;
+}
+
+.split-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+}
+
+.split-layout h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+.split-layout p:not(.eyebrow) {
+    color: inherit;
+    line-height: 1.72;
+}
+
+.section-deep {
+    color: #fffaf0;
+    background: var(--deep-soft);
+}
+
+.section-deep .media-card {
+    background: #071512;
+}
+
+.single-column {
+    grid-template-columns: 1fr;
 }
 
 .section,
@@ -515,6 +578,7 @@ textarea {
 
     .hero-grid,
     .contact-layout,
+    .split-layout,
     .card-grid,
     .dashboard-grid {
         grid-template-columns: 1fr;
@@ -527,6 +591,11 @@ textarea {
     .hero-copy h1 {
         max-width: 13ch;
         font-size: clamp(2.6rem, 13vw, 4rem);
+    }
+
+    .media-card img,
+    .hero-media img {
+        min-height: 240px;
     }
 }
 

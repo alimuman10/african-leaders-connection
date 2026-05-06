@@ -18,20 +18,9 @@
                     <a class="button button-outline" href="#contact">Contact Us</a>
                 </div>
             </div>
-            <div class="hero-panel" aria-label="Platform highlights">
-                <div>
-                    <strong>Leadership</strong>
-                    <span>Training, visibility, and responsible public influence.</span>
-                </div>
-                <div>
-                    <strong>Innovation</strong>
-                    <span>Digital systems and tools for modern institutions.</span>
-                </div>
-                <div>
-                    <strong>Community</strong>
-                    <span>Partnerships, mentorship, and story-led impact.</span>
-                </div>
-            </div>
+            <figure class="media-card hero-media">
+                <img src="{{ asset('assets/images/african-leader-meeting-hero.png') }}" alt="African leader in a professional meeting representing service and practical progress">
+            </figure>
         </div>
     </section>
 
@@ -53,6 +42,25 @@
                 <h3>Impact Stories</h3>
                 <p>Storytelling that makes progress visible, credible, and useful for emerging African leaders.</p>
             </article>
+        </div>
+    </section>
+
+    <section class="section section-deep">
+        <div class="shell split-layout">
+            <figure class="media-card">
+                <img src="{{ asset('assets/images/africa-map-bronze.png') }}" alt="Bronze map of Africa representing Pan-African connection">
+            </figure>
+            <div>
+                <p class="eyebrow">Leadership. Unity. Progress.</p>
+                <h2>A platform built for visibility, trust, and real collaboration.</h2>
+                <p>
+                    The African Leaders Connection brand brings together leadership ideas, practical services, advocacy, stories, and community pathways in one professional digital home.
+                </p>
+                <div class="button-row">
+                    <a class="button button-primary" href="{{ route('advocacy') }}">Explore Advocacy</a>
+                    <a class="button button-outline" href="{{ route('stories') }}">Read Stories</a>
+                </div>
+            </div>
         </div>
     </section>
 
