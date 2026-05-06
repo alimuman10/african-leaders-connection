@@ -129,16 +129,30 @@ class DashboardSystemController extends Controller
             default => LeadershipStory::class,
         };
 
-        $submission = $model::create([
+        $basePayload = [
             'user_id' => $request->user()->id,
             'title' => $validated['title'],
             'summary' => $validated['summary'] ?? null,
-            'body' => $validated['body'] ?? ($validated['summary'] ?? ''),
-            'description' => $validated['body'] ?? ($validated['summary'] ?? null),
             'country' => $validated['country'] ?? null,
             'status' => 'pending',
-            'submitted_at' => now(),
-        ]);
+        ];
+
+        $submission = match ($validated['type']) {
+            'project' => $model::create([
+                ...$basePayload,
+                'description' => $validated['body'] ?? ($validated['summary'] ?? null),
+                'submitted_at' => now(),
+            ]),
+            'campaign' => $model::create([
+                ...$basePayload,
+                'description' => $validated['body'] ?? ($validated['summary'] ?? null),
+            ]),
+            default => $model::create([
+                ...$basePayload,
+                'body' => $validated['body'] ?? ($validated['summary'] ?? ''),
+                'submitted_at' => now(),
+            ]),
+        };
 
         return response()->json($submission, 201);
     }
@@ -273,6 +287,14 @@ class DashboardSystemController extends Controller
             $payload['slug'] = $payload['slug'] ?? Str::slug($payload['title']).'-'.Str::lower(Str::random(6));
         }
 
+        if (in_array('user_id', (new $model())->getFillable(), true)) {
+            $payload['user_id'] = $request->user()->id;
+        }
+
+        if (in_array('created_by', (new $model())->getFillable(), true)) {
+            $payload['created_by'] = $request->user()->id;
+        }
+
         return response()->json($model::create($payload), 201);
     }
 
@@ -302,20 +324,41 @@ class DashboardSystemController extends Controller
 
     private function resourcePayload(Request $request, string $resource): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:180'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'excerpt' => ['nullable', 'string', 'max:1000'],
             'body' => ['nullable', 'string'],
             'summary' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
+            'location' => ['nullable', 'string', 'max:180'],
+            'eligibility' => ['nullable', 'string', 'max:255'],
+            'external_url' => ['nullable', 'url', 'max:255'],
             'category' => ['nullable', 'string', 'max:120'],
             'country' => ['nullable', 'string', 'max:120'],
+            'audience' => ['nullable', 'string', 'max:120'],
             'status' => ['nullable', 'string', 'max:80'],
             'featured' => ['nullable', 'boolean'],
+            'is_online' => ['nullable', 'boolean'],
+            'starts_at' => ['nullable', 'date'],
+            'ends_at' => ['nullable', 'date'],
+            'deadline_at' => ['nullable', 'date'],
+            'scheduled_at' => ['nullable', 'date'],
             'key' => ['sometimes', 'string', 'max:160'],
             'value' => ['nullable'],
             'group' => ['nullable', 'string', 'max:120'],
-            'content' => ['nullable', 'array'],
+            'content' => ['nullable'],
+            'active' => ['nullable', 'boolean'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        $model = $this->resolveResource($resource);
+        $fillable = (new $model())->getFillable();
+
+        return collect($validated)
+            ->filter(fn ($value) => $value !== '')
+            ->only($fillable)
+            ->all();
     }
 
     private function profileCompletion(User $user, array $incoming = []): int

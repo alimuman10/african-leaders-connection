@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { apiRequest, collectionFrom } from '../lib/api';
+import { useMemo, useState } from 'react';
+import { useApiMutation, useCollectionQuery } from '../lib/query';
 
 const defaultFields = [
     { name: 'title', label: 'Title', required: true },
@@ -9,30 +9,30 @@ const defaultFields = [
 
 export default function ResourceManager({ title, endpoint, fields = defaultFields }) {
     const initialForm = useMemo(() => Object.fromEntries(fields.map((field) => [field.name, ''])), [fields]);
-    const [items, setItems] = useState([]);
     const [form, setForm] = useState(initialForm);
     const [editingId, setEditingId] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
+    const [search, setSearch] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const queryKey = ['admin-resource', endpoint];
+    const { data: items = [], isLoading } = useCollectionQuery(queryKey, endpoint, {
+        onError: (exception) => setError(exception.message),
+    });
+    const mutation = useApiMutation({ invalidate: [queryKey] });
+    const filteredItems = useMemo(() => {
+        const term = search.trim().toLowerCase();
+        if (!term) return items;
 
-    async function load() {
-        setLoading(true);
-        setError('');
-        try {
-            const payload = await apiRequest(endpoint);
-            setItems(collectionFrom(payload));
-        } catch (exception) {
-            setError(exception.message);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        load();
-    }, [endpoint]);
+        return items.filter((item) => [
+            item.title,
+            item.name,
+            item.subject,
+            item.category,
+            item.country,
+            item.status,
+            item.email,
+        ].filter(Boolean).some((value) => String(value).toLowerCase().includes(term)));
+    }, [items, search]);
 
     function edit(item) {
         setEditingId(item.id);
@@ -48,21 +48,18 @@ export default function ResourceManager({ title, endpoint, fields = defaultField
 
     async function submit(event) {
         event.preventDefault();
-        setSaving(true);
         setMessage('');
         setError('');
         try {
-            await apiRequest(editingId ? `${endpoint}/${editingId}` : endpoint, {
+            await mutation.mutateAsync({
+                endpoint: editingId ? `${endpoint}/${editingId}` : endpoint,
                 method: editingId ? 'PUT' : 'POST',
-                body: JSON.stringify(form),
+                body: form,
             });
             setMessage(editingId ? `${title} updated successfully.` : `${title} created successfully.`);
             reset();
-            await load();
         } catch (exception) {
             setError(exception.payload?.message || exception.message);
-        } finally {
-            setSaving(false);
         }
     }
 
@@ -71,9 +68,8 @@ export default function ResourceManager({ title, endpoint, fields = defaultField
         setError('');
         setMessage('');
         try {
-            await apiRequest(`${endpoint}/${item.id}`, { method: 'DELETE' });
+            await mutation.mutateAsync({ endpoint: `${endpoint}/${item.id}`, method: 'DELETE' });
             setMessage(`${title} deleted successfully.`);
-            await load();
         } catch (exception) {
             setError(exception.message);
         }
@@ -103,8 +99,19 @@ export default function ResourceManager({ title, endpoint, fields = defaultField
                                 onChange={(event) => setForm({ ...form, [field.name]: event.target.value })}
                                 className="mt-2 min-h-28 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-amber-500"
                             />
+                        ) : field.type === 'select' ? (
+                            <select
+                                required={field.required}
+                                value={form[field.name] ?? ''}
+                                onChange={(event) => setForm({ ...form, [field.name]: event.target.value })}
+                                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-amber-500"
+                            >
+                                <option value="">Select {field.label.toLowerCase()}</option>
+                                {field.options.map((option) => <option key={option} value={option}>{option}</option>)}
+                            </select>
                         ) : (
                             <input
+                                type={field.type || 'text'}
                                 required={field.required}
                                 value={form[field.name] ?? ''}
                                 onChange={(event) => setForm({ ...form, [field.name]: event.target.value })}
@@ -113,19 +120,28 @@ export default function ResourceManager({ title, endpoint, fields = defaultField
                         )}
                     </label>
                 ))}
-                <button disabled={saving} className="rounded-md bg-slate-950 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800 disabled:opacity-60">
-                    {saving ? 'Saving...' : editingId ? 'Update' : 'Create'}
+                <button disabled={mutation.isPending} className="rounded-md bg-slate-950 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800 disabled:opacity-60">
+                    {mutation.isPending ? 'Saving...' : editingId ? 'Update' : 'Create'}
                 </button>
             </form>
 
+            <div className="mt-6">
+                <input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search by title, status, category, or country"
+                    className="w-full rounded-md border border-slate-300 px-3 py-3 text-sm outline-none focus:border-amber-500"
+                />
+            </div>
+
             <div className="mt-6 overflow-hidden rounded-lg border border-slate-200">
-                {loading ? (
+                {isLoading ? (
                     <p className="p-6 text-sm text-slate-500">Loading {title.toLowerCase()}...</p>
-                ) : items.length === 0 ? (
+                ) : filteredItems.length === 0 ? (
                     <p className="p-6 text-sm text-slate-500">No records yet. Add the first item above.</p>
                 ) : (
                     <div className="divide-y divide-slate-200">
-                        {items.map((item) => (
+                        {filteredItems.map((item) => (
                             <article key={item.id} className="flex flex-wrap items-center justify-between gap-4 p-4">
                                 <div>
                                     <strong className="block text-sm text-slate-950">{item.title || item.name || item.subject || `Record #${item.id}`}</strong>

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
 import DashboardLayout from '../../Layouts/DashboardLayout';
 import MetricCard from '../../Components/MetricCard';
+import ResourceManager from '../../Components/ResourceManager';
 import SectionCard from '../../Components/SectionCard';
 import StatusBadge from '../../Components/StatusBadge';
-import { apiRequest, collectionFrom } from '../../lib/api';
+import { useApiMutation, useApiQuery, useCollectionQuery } from '../../lib/query';
 
 const navItems = [
     'Overview',
@@ -22,24 +22,20 @@ const navItems = [
 ].map((label) => ({ label, href: `#${label.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}` }));
 
 export default function AdminDashboard() {
-    const [dashboard, setDashboard] = useState(null);
-    const [members, setMembers] = useState([]);
-    const [reports, setReports] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        Promise.all([
-            apiRequest('/api/admin/dashboard').catch(() => null),
-            apiRequest('/api/admin/members').catch(() => ({ data: [] })),
-            apiRequest('/api/admin/reports').catch(() => ({ data: [] })),
-        ]).then(([dashboardPayload, memberPayload, reportPayload]) => {
-            setDashboard(dashboardPayload || null);
-            setMembers(collectionFrom(memberPayload));
-            setReports(collectionFrom(reportPayload));
-        }).finally(() => setLoading(false));
-    }, []);
+    const { data: dashboard = null } = useApiQuery(['admin-dashboard'], '/api/admin/dashboard');
+    const { data: members = [] } = useCollectionQuery(['admin-members'], '/api/admin/members');
+    const { data: reports = [] } = useCollectionQuery(['admin-reports'], '/api/admin/reports');
+    const statusMutation = useApiMutation({ invalidate: [['admin-members'], ['admin-dashboard']] });
 
     const metrics = dashboard?.metrics || {};
+
+    async function changeStatus(member, status) {
+        await statusMutation.mutateAsync({
+            endpoint: `/api/admin/members/${member.id}/status`,
+            method: 'PUT',
+            body: { status },
+        });
+    }
 
     return (
         <DashboardLayout title="Super Admin Dashboard" eyebrow="Full Platform Control" navItems={navItems}>
@@ -68,7 +64,7 @@ export default function AdminDashboard() {
                         <div className="overflow-x-auto">
                             <table className="w-full min-w-[640px] text-left text-sm">
                                 <thead className="border-b border-[#e2d5b8] text-xs uppercase tracking-wide text-[#9b6825]">
-                                    <tr><th className="py-2">Name</th><th>Email</th><th>Country</th><th>Status</th><th>Roles</th></tr>
+                                    <tr><th className="py-2">Name</th><th>Email</th><th>Country</th><th>Status</th><th>Roles</th><th>Action</th></tr>
                                 </thead>
                                 <tbody>
                                     {(members.length ? members : [{ name: 'No members loaded', email: '-', status: 'pending', roles: [] }]).slice(0, 8).map((member, index) => (
@@ -78,6 +74,21 @@ export default function AdminDashboard() {
                                             <td>{member.country || '-'}</td>
                                             <td><StatusBadge status={member.status || 'pending'} /></td>
                                             <td>{member.roles?.map?.((role) => role.name || role)?.join(', ') || 'Member'}</td>
+                                            <td>
+                                                {member.id && (
+                                                    <select
+                                                        value={member.status || 'active'}
+                                                        disabled={statusMutation.isPending}
+                                                        onChange={(event) => changeStatus(member, event.target.value)}
+                                                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-bold"
+                                                    >
+                                                        <option value="active">Active</option>
+                                                        <option value="suspended">Suspended</option>
+                                                        <option value="banned">Banned</option>
+                                                        <option value="pending verification">Pending verification</option>
+                                                    </select>
+                                                )}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -97,22 +108,78 @@ export default function AdminDashboard() {
                     </SectionCard>
                 </div>
 
+                <div id="content-management" className="grid gap-6">
+                    <ResourceManager title="Leadership Articles" endpoint="/api/admin/posts" fields={postFields} />
+                    <ResourceManager title="Event Management" endpoint="/api/admin/events" fields={eventFields} />
+                    <ResourceManager title="Opportunity Management" endpoint="/api/admin/opportunities" fields={opportunityFields} />
+                    <ResourceManager title="Advocacy Campaign Management" endpoint="/api/admin/campaigns" fields={campaignFields} />
+                    <ResourceManager title="Announcement Management" endpoint="/api/admin/announcements" fields={announcementFields} />
+                    <ResourceManager title="Homepage Control" endpoint="/api/admin/homepage" fields={homepageFields} />
+                    <ResourceManager title="System Settings" endpoint="/api/admin/settings" fields={settingFields} />
+                </div>
+
                 <div className="grid gap-6 xl:grid-cols-3">
-                    <AdminModule title="Moderator Invitation Management" items={['Invite a member', 'Track invitation status', 'Revoke moderator role', 'View moderator reports']} />
-                    <AdminModule title="Content Management" items={['Leadership articles', 'Platform news', 'Member submissions', 'Homepage features']} />
-                    <AdminModule title="Announcements" items={['All-member announcements', 'Country targeting', 'Scheduled notices', 'Archive history']} />
-                    <AdminModule title="Event Management" items={['Create events', 'Manage registrations', 'Upload resources', 'Send reminders']} />
-                    <AdminModule title="Opportunity Management" items={['Scholarships', 'Fellowships', 'Grants', 'Jobs and internships']} />
-                    <AdminModule title="Advocacy Campaign Management" items={['Create campaigns', 'Approve proposals', 'Track supporters', 'Impact reports']} />
-                    <AdminModule title="Homepage & Website Control" items={['Hero text', 'Featured stories', 'CTA sections', 'Public pages']} />
+                    <AdminModule title="Moderator Invitation Management" items={['Invite selected members', 'Track invitation status', 'Revoke moderator role', 'Review moderator reports']} />
                     <AdminModule title="Analytics" items={['Member growth', 'Engagement', 'Country participation', 'Top contributors']} />
-                    <AdminModule title="System Settings" items={['Brand colors', 'SEO settings', 'Email settings', 'Privacy and terms']} />
                     <AdminModule title="Security & Audit Logs" items={['Login history', 'Role changes', 'Content changes', 'Suspicious activity']} />
                 </div>
             </div>
         </DashboardLayout>
     );
 }
+
+const statusOptions = ['draft', 'published', 'active', 'scheduled', 'expired', 'archived'];
+const postFields = [
+    { name: 'title', label: 'Title', required: true },
+    { name: 'excerpt', label: 'Excerpt' },
+    { name: 'body', label: 'Body', type: 'textarea', required: true },
+    { name: 'category', label: 'Category' },
+    { name: 'status', label: 'Status', type: 'select', options: statusOptions },
+];
+const eventFields = [
+    { name: 'title', label: 'Title', required: true },
+    { name: 'summary', label: 'Summary' },
+    { name: 'description', label: 'Description', type: 'textarea' },
+    { name: 'location', label: 'Location' },
+    { name: 'starts_at', label: 'Start date/time', type: 'datetime-local' },
+    { name: 'status', label: 'Status', type: 'select', options: ['scheduled', 'draft', 'completed', 'cancelled'] },
+];
+const opportunityFields = [
+    { name: 'title', label: 'Title', required: true },
+    { name: 'category', label: 'Category', required: true },
+    { name: 'country', label: 'Country' },
+    { name: 'eligibility', label: 'Eligibility' },
+    { name: 'summary', label: 'Summary', type: 'textarea' },
+    { name: 'external_url', label: 'External URL', type: 'url' },
+    { name: 'deadline_at', label: 'Deadline', type: 'datetime-local' },
+    { name: 'status', label: 'Status', type: 'select', options: ['active', 'expired', 'draft', 'featured'] },
+];
+const campaignFields = [
+    { name: 'title', label: 'Title', required: true },
+    { name: 'country', label: 'Country' },
+    { name: 'summary', label: 'Summary' },
+    { name: 'description', label: 'Description', type: 'textarea' },
+    { name: 'status', label: 'Status', type: 'select', options: ['active', 'draft', 'closed', 'pending'] },
+];
+const announcementFields = [
+    { name: 'title', label: 'Title', required: true },
+    { name: 'body', label: 'Body', type: 'textarea', required: true },
+    { name: 'audience', label: 'Audience', type: 'select', options: ['all', 'members', 'moderators'] },
+    { name: 'country', label: 'Country' },
+    { name: 'category', label: 'Category' },
+];
+const homepageFields = [
+    { name: 'key', label: 'Section Key', required: true },
+    { name: 'title', label: 'Title', required: true },
+    { name: 'subtitle', label: 'Subtitle' },
+    { name: 'content', label: 'Content', type: 'textarea' },
+    { name: 'sort_order', label: 'Sort order', type: 'number' },
+];
+const settingFields = [
+    { name: 'key', label: 'Setting Key', required: true },
+    { name: 'value', label: 'Value', required: true },
+    { name: 'group', label: 'Group' },
+];
 
 function AdminModule({ title, items }) {
     return (
