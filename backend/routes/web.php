@@ -29,5 +29,7 @@ Route::post('/contact', [ContactController::class, 'store'])->middleware('thrott
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::view('/member/{path?}', 'app')->where('path', '.*')->name('member.dashboard');
+    Route::view('/admin/{path?}', 'app')->where('path', '.*')->middleware('role:Super Admin')->name('admin.dashboard');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

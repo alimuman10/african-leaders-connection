@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -30,6 +31,9 @@ class RegisteredUserController extends Controller
             'password' => $validated['password'],
             'status' => 'pending',
         ]);
+
+        Role::firstOrCreate(['name' => 'Member', 'guard_name' => 'web']);
+        $user->assignRole('Member');
 
         Profile::create([
             'user_id' => $user->id,

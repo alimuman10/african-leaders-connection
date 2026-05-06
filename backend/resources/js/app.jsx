@@ -22,7 +22,7 @@ function App() {
     if (path === '/verify-email') return <VerifyEmail />;
     if (path.endsWith('/profile')) return <Profile />;
 
-    if (path.startsWith('/member')) {
+    if (path.startsWith('/member') || path === '/dashboard') {
         return <MemberDashboard />;
     }
 

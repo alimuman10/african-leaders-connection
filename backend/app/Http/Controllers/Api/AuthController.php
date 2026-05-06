@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -34,6 +35,7 @@ class AuthController extends Controller
             ]),
             'status' => 'pending',
         ]);
+        Role::firstOrCreate(['name' => 'Member', 'guard_name' => 'web']);
         $user->assignRole('Member');
         $user->profile()->create($request->safe()->only([
             'phone',
@@ -60,7 +62,7 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['email' => 'The provided credentials are incorrect.']);
         }
 
-        if (in_array($user->status, ['suspended', 'deactivated'], true)) {
+        if (in_array($user->status, ['suspended', 'banned', 'deactivated'], true)) {
             throw ValidationException::withMessages(['email' => 'This account is not active.']);
         }
 

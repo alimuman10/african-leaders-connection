@@ -22,25 +22,65 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            'view dashboard',
+            'edit own profile',
+            'create submission',
+            'comment',
+            'react',
+            'report content',
+            'register for events',
+            'save opportunities',
+            'view moderator tools',
+            'review reports',
+            'hide content',
+            'warn members',
+            'submit moderation report',
+            'approve/reject comments',
+            'full platform access',
             'manage users',
+            'manage moderators',
             'manage content',
             'manage community',
             'manage contact messages',
             'manage media',
-            'view dashboard',
+            'manage events',
+            'manage opportunities',
+            'manage campaigns',
+            'manage settings',
+            'view analytics',
+            'manage homepage',
+            'view audit logs',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
+        $memberPermissions = [
+            'view dashboard',
+            'edit own profile',
+            'create submission',
+            'comment',
+            'react',
+            'report content',
+            'register for events',
+            'save opportunities',
+        ];
+
+        $moderatorPermissions = [
+            ...$memberPermissions,
+            'view moderator tools',
+            'review reports',
+            'hide content',
+            'warn members',
+            'submit moderation report',
+            'approve/reject comments',
+        ];
+
         $roles = [
+            'Member' => $memberPermissions,
+            'Moderator' => $moderatorPermissions,
             'Super Admin' => $permissions,
-            'Admin' => $permissions,
-            'Content Manager' => ['manage content', 'manage media', 'view dashboard'],
-            'Community Manager' => ['manage community', 'manage contact messages', 'view dashboard'],
-            'Member' => [],
-            'Visitor / Guest' => [],
         ];
 
         foreach ($roles as $name => $rolePermissions) {
@@ -56,7 +96,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $admin->assignRole('Super Admin');
+        $admin->syncRoles(['Super Admin']);
 
         $services = [
             'Leadership Development',
