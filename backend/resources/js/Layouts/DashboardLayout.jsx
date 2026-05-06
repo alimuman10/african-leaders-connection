@@ -1,6 +1,26 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { apiRequest } from '../lib/api';
+
 const brand = 'African Leaders Connection';
 
 export default function DashboardLayout({ title, eyebrow = 'Platform Dashboard', navItems = [], user = null, children }) {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    async function logout() {
+        try {
+            await apiRequest('/api/logout', { method: 'POST' });
+        } catch {
+            // Local auth state is cleared even if the server token has already expired.
+        }
+
+        localStorage.removeItem('alc_token');
+        sessionStorage.removeItem('alc_token');
+        queryClient.clear();
+        navigate('/login', { replace: true });
+    }
+
     return (
         <div className="min-h-screen bg-[#f7f2e8] text-[#111827]">
             <aside className="fixed inset-y-0 left-0 z-30 hidden w-76 border-r border-[#d7c49a] bg-[#061311] p-6 text-white lg:block">
@@ -35,6 +55,7 @@ export default function DashboardLayout({ title, eyebrow = 'Platform Dashboard',
                         <div className="flex flex-wrap items-center gap-3">
                             {user && <span className="rounded-md border border-[#d7c49a] bg-white px-3 py-2 text-sm font-bold text-[#10211e]">{user.name}</span>}
                             <a className="rounded-md bg-[#061311] px-4 py-2 text-sm font-black text-white" href="/">Public Site</a>
+                            <button onClick={logout} className="rounded-md border border-[#061311] px-4 py-2 text-sm font-black text-[#061311]">Logout</button>
                         </div>
                     </div>
                 </header>

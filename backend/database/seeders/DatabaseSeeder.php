@@ -13,7 +13,6 @@ use App\Models\Story;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -88,15 +87,11 @@ class DatabaseSeeder extends Seeder
             $role->syncPermissions($rolePermissions);
         }
 
-        $admin = User::firstOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@africanleadersconnection.org')],
-            [
-                'name' => env('ADMIN_NAME', 'African Leaders Connection Admin'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'ChangeMe-Strong-2026!')),
-                'email_verified_at' => now(),
-            ]
-        );
-        $admin->syncRoles(['Super Admin']);
+        if (filled(config('auth_security.super_admin_password'))) {
+            $this->call(SuperAdminSeeder::class);
+        }
+
+        $contentAuthor = User::role('Super Admin')->first();
 
         $services = [
             'Leadership Development',
@@ -177,7 +172,7 @@ class DatabaseSeeder extends Seeder
                 ['slug' => str($story['title'])->slug()],
                 [
                     ...$story,
-                    'author_id' => $admin->id,
+                    'author_id' => $contentAuthor?->id,
                     'body' => 'African leadership becomes visible when people act with courage, responsibility, and service. This seeded story provides a starting point for editorial content, impact storytelling, and credibility-building narratives.',
                     'status' => 'published',
                     'published_at' => now(),
@@ -238,7 +233,7 @@ class DatabaseSeeder extends Seeder
         ActivityLog::firstOrCreate(
             ['action' => 'platform.seeded'],
             [
-                'user_id' => $admin->id,
+                'user_id' => $contentAuthor?->id,
                 'properties' => ['message' => 'Initial platform roles, services, stories, projects, resources, and partners seeded.'],
                 'ip_address' => '127.0.0.1',
             ]

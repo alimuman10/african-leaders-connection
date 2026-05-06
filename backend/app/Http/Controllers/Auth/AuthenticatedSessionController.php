@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Services\SecurityAuditLogger;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, SecurityAuditLogger $audit): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
@@ -24,17 +25,21 @@ class AuthenticatedSessionController extends Controller
         $request->user()->forceFill([
             'last_login_at' => now(),
         ])->save();
+        $audit->login($request->user(), $request);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended($request->user()->hasRole('Super Admin') ? '/admin/dashboard' : '/member/dashboard');
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, SecurityAuditLogger $audit): RedirectResponse
     {
+        $user = $request->user();
+        $user?->tokens()->delete();
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        $audit->event('auth.logout', $user, 'info', $user, [], $request);
 
-        return redirect()->route('home')->with('status', 'You have signed out securely.');
+        return redirect()->route('login')->with('status', 'You have signed out securely.');
     }
 }

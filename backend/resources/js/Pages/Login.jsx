@@ -18,7 +18,11 @@ export default function Login() {
                 method: 'POST',
                 body: JSON.stringify({ ...form, device_name: 'dashboard' }),
             });
-            if (payload?.token) localStorage.setItem('alc_token', payload.token);
+            if (payload?.token) {
+                const storage = form.remember ? localStorage : sessionStorage;
+                storage.setItem('alc_token', payload.token);
+                (form.remember ? sessionStorage : localStorage).removeItem('alc_token');
+            }
             const roles = payload?.user?.roles || [];
             window.location.href = payload?.user?.redirect_path || (roles.some((role) => adminRoles.includes(role)) ? '/admin/dashboard' : '/member/dashboard');
         } catch (exception) {

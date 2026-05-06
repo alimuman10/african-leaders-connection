@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use App\Services\SecurityAuditLogger;
 
 class RegisteredUserController extends Controller
 {
@@ -18,7 +19,7 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    public function store(RegisterRequest $request): RedirectResponse
+    public function store(RegisterRequest $request, SecurityAuditLogger $audit): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -29,7 +30,7 @@ class RegisteredUserController extends Controller
             'country' => $validated['country'] ?? null,
             'organization' => $validated['organization'] ?? null,
             'password' => $validated['password'],
-            'status' => 'pending',
+            'status' => 'pending verification',
         ]);
 
         Role::firstOrCreate(['name' => 'Member', 'guard_name' => 'web']);
@@ -43,9 +44,10 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        $audit->event('auth.registered', $user, 'info', $user, ['role' => 'Member'], $request);
 
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('status', 'Welcome to African Leaders Connection. Your account is ready.');
+        return redirect('/member/dashboard')->with('status', 'Welcome to African Leaders Connection. Please verify your email address.');
     }
 }

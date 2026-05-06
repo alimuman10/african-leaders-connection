@@ -19,6 +19,7 @@ use App\Models\PlatformSetting;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
+use App\Services\SecurityAuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -219,20 +220,22 @@ class DashboardSystemController extends Controller
         return response()->json($query->latest()->paginate(20));
     }
 
-    public function updateMemberStatus(Request $request, User $user)
+    public function updateMemberStatus(Request $request, User $user, SecurityAuditLogger $audit)
     {
         abort_if($user->hasRole('Super Admin'), 403, 'The main Super Admin cannot be suspended, banned, or demoted.');
 
         $validated = $request->validate(['status' => ['required', 'in:active,suspended,banned,pending verification']]);
         $user->update(['status' => $validated['status']]);
+        $audit->event('user.status_changed', $request->user(), 'warning', $user, ['status' => $validated['status']], $request);
 
         return response()->json($user->fresh('roles'));
     }
 
-    public function inviteModerator(Request $request)
+    public function inviteModerator(Request $request, SecurityAuditLogger $audit)
     {
         $validated = $request->validate(['user_id' => ['required', 'exists:users,id']]);
         $user = User::findOrFail($validated['user_id']);
+        abort_if($user->hasRole('Super Admin'), 403, 'Super Admin cannot be invited or changed through moderator workflows.');
 
         $invitation = ModeratorInvitation::create([
             'user_id' => $user->id,
@@ -242,15 +245,17 @@ class DashboardSystemController extends Controller
             'status' => 'invited',
             'expires_at' => now()->addDays(14),
         ]);
+        $audit->event('moderator.invited', $request->user(), 'info', $user, ['invitation_id' => $invitation->id], $request);
 
         return response()->json($invitation, 201);
     }
 
-    public function revokeModerator(User $user)
+    public function revokeModerator(Request $request, User $user, SecurityAuditLogger $audit)
     {
         abort_if($user->hasRole('Super Admin'), 403);
         $user->removeRole('Moderator');
         ModeratorInvitation::where('user_id', $user->id)->whereIn('status', ['invited', 'accepted'])->update(['status' => 'revoked', 'revoked_at' => now()]);
+        $audit->event('moderator.revoked', $request->user(), 'warning', $user, [], $request);
 
         return response()->json(['message' => 'Moderator privileges revoked.']);
     }

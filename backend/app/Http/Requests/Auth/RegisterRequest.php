@@ -14,7 +14,7 @@ class RegisterRequest extends FormRequest
 
     public function rules(): array
     {
-        $password = Password::min(8)->letters()->mixedCase()->numbers();
+        $password = Password::min(10)->letters()->mixedCase()->numbers()->symbols();
 
         if (! app()->environment('testing')) {
             $password->uncompromised();
@@ -22,11 +22,20 @@ class RegisterRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email:rfc', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'email:rfc', 'max:255', 'unique:users,email', $this->reservedSuperAdminEmailRule()],
             'phone' => ['nullable', 'string', 'max:40'],
             'country' => ['nullable', 'string', 'max:120'],
             'organization' => ['nullable', 'string', 'max:160'],
             'password' => ['required', 'confirmed', $password],
         ];
+    }
+
+    private function reservedSuperAdminEmailRule(): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
+            if (strtolower((string) $value) === strtolower((string) config('auth_security.super_admin_email'))) {
+                $fail('This email address is reserved for platform bootstrap.');
+            }
+        };
     }
 }

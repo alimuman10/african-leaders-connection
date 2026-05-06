@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): RedirectResponse
     {
-        return view('dashboard.index', [
-            'user' => $request->user(),
-        ]);
+        return redirect($request->user()->hasRole('Super Admin') ? '/admin/dashboard' : '/member/dashboard');
     }
 }

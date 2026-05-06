@@ -35,18 +35,19 @@ class WebAuthAndContactTest extends TestCase
             'organization' => 'African Leaders Connection',
             'password' => $password,
             'password_confirmation' => $password,
-        ])->assertRedirect('/dashboard');
+        ])->assertRedirect('/member/dashboard');
 
         $this->assertAuthenticated();
-        $this->get('/dashboard')->assertOk()->assertSee('Aminata Kamara');
+        $this->get('/dashboard')->assertRedirect('/member/dashboard');
+        $this->get('/member/dashboard')->assertOk();
 
-        $this->post('/logout')->assertRedirect('/');
+        $this->post('/logout')->assertRedirect('/login');
         $this->assertGuest();
 
         $this->post('/login', [
             'email' => 'aminata@example.com',
             'password' => $password,
-        ])->assertRedirect('/dashboard');
+        ])->assertRedirect('/member/dashboard');
 
         $this->assertAuthenticated();
     }

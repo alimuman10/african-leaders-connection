@@ -19,8 +19,9 @@ export default function Register() {
         setSuccess('');
         try {
             const payload = await apiRequest('/api/register', { method: 'POST', body: JSON.stringify(form) });
-            if (payload?.token) localStorage.setItem('alc_token', payload.token);
+            if (payload?.token) sessionStorage.setItem('alc_token', payload.token);
             setSuccess('Account created. Please check your email to verify your account before accessing the dashboard.');
+            window.location.href = payload?.user?.redirect_path || '/member/dashboard';
         } catch (exception) {
             setError(exception.payload?.message || exception.message);
         } finally {

@@ -8,7 +8,6 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -42,7 +41,11 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'email' => ['required', 'email', 'unique:users,email', function (string $attribute, mixed $value, \Closure $fail): void {
+                if (strtolower((string) $value) === strtolower((string) config('auth_security.super_admin_email'))) {
+                    $fail('This email address is reserved for platform bootstrap.');
+                }
+            }],
             'password' => ['nullable', Password::min(10)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'roles' => ['nullable', 'array'],
             'phone' => ['nullable', 'string', 'max:40'],
@@ -51,6 +54,7 @@ class UserController extends Controller
             'organization' => ['nullable', 'string', 'max:160'],
             'leadership_interest' => ['nullable', 'string', 'max:180'],
         ]);
+        abort_if(in_array('Super Admin', $validated['roles'] ?? [], true), 403, 'Super Admin accounts can only be bootstrapped from the backend.');
 
         $user = User::create([
             'name' => $validated['name'],
@@ -79,10 +83,12 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $this->guardSuperAdminMutation($user);
+
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:120'],
             'email' => ['sometimes', 'email', Rule::unique('users')->ignore($user)],
-            'status' => ['sometimes', Rule::in(['active', 'pending', 'suspended', 'deactivated'])],
+            'status' => ['sometimes', Rule::in(['active', 'pending verification', 'suspended', 'banned', 'deactivated'])],
             'roles' => ['sometimes', 'array'],
             'phone' => ['sometimes', 'nullable', 'string', 'max:40'],
             'country' => ['sometimes', 'nullable', 'string', 'max:120'],
@@ -90,6 +96,7 @@ class UserController extends Controller
             'organization' => ['sometimes', 'nullable', 'string', 'max:160'],
             'leadership_interest' => ['sometimes', 'nullable', 'string', 'max:180'],
         ]);
+        abort_if(in_array('Super Admin', $validated['roles'] ?? [], true), 403, 'Super Admin role changes are not allowed through user management.');
 
         $user->update(collect($validated)->except('roles')->all());
         if (isset($validated['roles'])) {
@@ -112,6 +119,7 @@ class UserController extends Controller
 
     public function reactivate(User $user)
     {
+        $this->guardSuperAdminMutation($user);
         $user->update(['status' => 'active']);
         $this->logActivity('user.reactivated', $user);
 
@@ -120,7 +128,9 @@ class UserController extends Controller
 
     public function assignRole(Request $request, User $user)
     {
+        $this->guardSuperAdminMutation($user);
         $validated = $request->validate(['role' => ['required', 'string', 'exists:roles,name']]);
+        abort_if($validated['role'] === 'Super Admin', 403, 'Super Admin role can only be assigned during backend bootstrap.');
         $user->assignRole($validated['role']);
         $this->logActivity('user.role_assigned', $user, ['role' => $validated['role']]);
 
@@ -129,11 +139,8 @@ class UserController extends Controller
 
     public function removeRole(Request $request, User $user)
     {
+        $this->guardSuperAdminMutation($user);
         $validated = $request->validate(['role' => ['required', 'string', 'exists:roles,name']]);
-        if ($user->hasRole('Super Admin') && $validated['role'] === 'Super Admin') {
-            throw ValidationException::withMessages(['role' => 'Super Admin role cannot be removed through the API.']);
-        }
-
         $user->removeRole($validated['role']);
         $this->logActivity('user.role_removed', $user, ['role' => $validated['role']]);
 

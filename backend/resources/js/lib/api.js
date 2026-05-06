@@ -1,5 +1,5 @@
 export async function apiRequest(path, options = {}) {
-    const token = localStorage.getItem('alc_token');
+    const token = sessionStorage.getItem('alc_token') || localStorage.getItem('alc_token');
     const headers = {
         Accept: 'application/json',
         ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
@@ -8,6 +8,7 @@ export async function apiRequest(path, options = {}) {
     };
 
     const response = await fetch(path, {
+        credentials: 'same-origin',
         headers,
         ...options,
     });
