@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class WebAuthAndContactTest extends TestCase
@@ -39,6 +42,12 @@ class WebAuthAndContactTest extends TestCase
 
         $this->assertAuthenticated();
         $this->get('/dashboard')->assertRedirect('/member/dashboard');
+        $this->get('/member/dashboard')->assertRedirect('/verify-email');
+
+        $user = User::where('email', 'aminata@example.com')->firstOrFail();
+        $user->forceFill(['email_verified_at' => now(), 'status' => 'active'])->save();
+
+        $this->actingAs($user->fresh());
         $this->get('/member/dashboard')->assertOk();
 
         $this->post('/logout')->assertRedirect('/login');
@@ -50,6 +59,86 @@ class WebAuthAndContactTest extends TestCase
         ])->assertRedirect('/member/dashboard');
 
         $this->assertAuthenticated();
+    }
+
+    public function test_public_registration_cannot_use_super_admin_email(): void
+    {
+        $this->withoutVite();
+
+        $this->from('/register')->post('/register', [
+            'name' => 'Blocked Admin',
+            'email' => config('auth_security.super_admin_email'),
+            'password' => 'StrongPass#2026',
+            'password_confirmation' => 'StrongPass#2026',
+        ])->assertRedirect('/register')
+            ->assertSessionHasErrors('email');
+
+        $this->assertDatabaseMissing(User::class, [
+            'email' => config('auth_security.super_admin_email'),
+        ]);
+    }
+
+    public function test_super_admin_logs_in_to_admin_dashboard_and_member_cannot_open_admin_dashboard(): void
+    {
+        $this->withoutVite();
+
+        Role::firstOrCreate(['name' => 'Member', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
+
+        $member = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'active',
+        ]);
+        $member->assignRole('Member');
+
+        $this->actingAs($member)
+            ->get('/admin/dashboard')
+            ->assertForbidden();
+
+        auth()->logout();
+
+        $superAdmin = User::factory()->create([
+            'email' => config('auth_security.super_admin_email'),
+            'password' => Hash::make('StrongPass#2026'),
+            'email_verified_at' => now(),
+            'status' => 'active',
+        ]);
+        $superAdmin->assignRole('Super Admin');
+
+        $this->post('/login', [
+            'email' => $superAdmin->email,
+            'password' => 'StrongPass#2026',
+        ])->assertRedirect('/admin/dashboard');
+    }
+
+    public function test_api_user_management_cannot_assign_super_admin_role(): void
+    {
+        Role::firstOrCreate(['name' => 'Member', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
+
+        $superAdmin = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'active',
+        ]);
+        $superAdmin->assignRole('Super Admin');
+
+        $member = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'active',
+        ]);
+        $member->assignRole('Member');
+
+        Sanctum::actingAs($superAdmin);
+
+        $this->postJson('/api/admin/users', [
+            'name' => 'Injected Admin',
+            'email' => 'injected-admin@example.com',
+            'roles' => ['Super Admin'],
+        ])->assertUnprocessable();
+
+        $this->postJson("/api/admin/users/{$member->id}/roles/assign", [
+            'role' => 'Super Admin',
+        ])->assertUnprocessable();
     }
 
     public function test_dashboard_requires_authentication(): void

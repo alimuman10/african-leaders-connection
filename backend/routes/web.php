@@ -28,8 +28,9 @@ Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
 
 Route::middleware('auth')->group(function () {
+    Route::view('/verify-email', 'app')->name('verification.notice');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::view('/member/{path?}', 'app')->where('path', '.*')->name('member.dashboard');
-    Route::view('/admin/{path?}', 'app')->where('path', '.*')->middleware('role:Super Admin')->name('admin.dashboard');
+    Route::view('/member/{path?}', 'app')->where('path', '.*')->middleware('verified')->name('member.dashboard');
+    Route::view('/admin/{path?}', 'app')->where('path', '.*')->middleware(['verified', 'role:Super Admin'])->name('admin.dashboard');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

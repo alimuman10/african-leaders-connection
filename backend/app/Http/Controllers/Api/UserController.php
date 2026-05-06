@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -54,7 +55,7 @@ class UserController extends Controller
             'organization' => ['nullable', 'string', 'max:160'],
             'leadership_interest' => ['nullable', 'string', 'max:180'],
         ]);
-        abort_if(in_array('Super Admin', $validated['roles'] ?? [], true), 403, 'Super Admin accounts can only be bootstrapped from the backend.');
+        $this->rejectSuperAdminRole($validated['roles'] ?? [], 'Super Admin accounts can only be bootstrapped from the backend.');
 
         $user = User::create([
             'name' => $validated['name'],
@@ -96,7 +97,7 @@ class UserController extends Controller
             'organization' => ['sometimes', 'nullable', 'string', 'max:160'],
             'leadership_interest' => ['sometimes', 'nullable', 'string', 'max:180'],
         ]);
-        abort_if(in_array('Super Admin', $validated['roles'] ?? [], true), 403, 'Super Admin role changes are not allowed through user management.');
+        $this->rejectSuperAdminRole($validated['roles'] ?? [], 'Super Admin role changes are not allowed through user management.');
 
         $user->update(collect($validated)->except('roles')->all());
         if (isset($validated['roles'])) {
@@ -130,7 +131,7 @@ class UserController extends Controller
     {
         $this->guardSuperAdminMutation($user);
         $validated = $request->validate(['role' => ['required', 'string', 'exists:roles,name']]);
-        abort_if($validated['role'] === 'Super Admin', 403, 'Super Admin role can only be assigned during backend bootstrap.');
+        $this->rejectSuperAdminRole([$validated['role']], 'Super Admin role can only be assigned during backend bootstrap.');
         $user->assignRole($validated['role']);
         $this->logActivity('user.role_assigned', $user, ['role' => $validated['role']]);
 
@@ -159,5 +160,16 @@ class UserController extends Controller
     private function guardSuperAdminMutation(User $user): void
     {
         abort_if($user->hasRole('Super Admin'), 403, 'Super Admin accounts cannot be modified through this action.');
+    }
+
+    private function rejectSuperAdminRole(array $roles, string $message): void
+    {
+        $containsSuperAdmin = collect($roles)
+            ->map(fn ($role) => strtolower(trim((string) $role)))
+            ->contains('super admin');
+
+        if ($containsSuperAdmin) {
+            throw ValidationException::withMessages(['role' => $message]);
+        }
     }
 }

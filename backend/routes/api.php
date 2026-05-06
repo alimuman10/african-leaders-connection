@@ -57,7 +57,7 @@ Route::get('services', [PlatformContentController::class, 'publicServices']);
 Route::get('advocacy', [PlatformContentController::class, 'publicAdvocacy']);
 Route::get('leadership', [PlatformContentController::class, 'publicLeadership']);
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('member')->group(function () {
         Route::get('dashboard', [DashboardSystemController::class, 'memberDashboard']);
         Route::get('profile', [DashboardSystemController::class, 'memberProfile']);
@@ -75,7 +75,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('actions', [DashboardSystemController::class, 'moderatorActions']);
     });
 
-    Route::middleware('role:Super Admin')->prefix('admin')->group(function () {
+    Route::middleware(['role:Super Admin'])->prefix('admin')->group(function () {
         Route::get('dashboard', [DashboardSystemController::class, 'adminDashboard']);
         Route::get('members', [DashboardSystemController::class, 'adminMembers']);
         Route::put('members/{user}/status', [DashboardSystemController::class, 'updateMemberStatus']);
